@@ -6,9 +6,6 @@
   <title>The Dark Armada | Command</title>
   <style>
     :root {
-      --bg: #06080f;
-      --panel: rgba(12, 18, 30, 0.76);
-      --panel-strong: rgba(8, 14, 24, 0.94);
       --text: #f4f1e8;
       --muted: #b1b6c7;
       --line: rgba(190, 166, 115, 0.18);
@@ -17,7 +14,7 @@
       --crimson: #8a1f2b;
       --sea: #123449;
       --shadow: 0 0 34px rgba(213, 177, 106, 0.12);
-      --max: 1260px;
+      --max: 1280px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,19 +28,19 @@
       background:
         radial-gradient(circle at 15% 18%, rgba(213, 177, 106, 0.08), transparent 18%),
         radial-gradient(circle at 82% 24%, rgba(18, 52, 73, 0.22), transparent 22%),
-        linear-gradient(180deg, #02040a 0%, #06080f 38%, #0a1220 100%);
+        linear-gradient(180deg, #02040a 0%, #06080f 38%, #091725 100%);
     }
 
     a { color: inherit; text-decoration: none; }
 
-    .sea-grid, .fog-layer, .embers {
+    .sea-grid, .fog-layer, .embers, .mist-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: -3;
     }
 
     .sea-grid {
+      z-index: -4;
       background-image:
         linear-gradient(rgba(213,177,106,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(213,177,106,0.03) 1px, transparent 1px);
@@ -52,7 +49,7 @@
     }
 
     .fog-layer {
-      z-index: -2;
+      z-index: -3;
       background:
         radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04), transparent 22%),
         radial-gradient(circle at 80% 60%, rgba(255,255,255,0.03), transparent 24%),
@@ -60,8 +57,18 @@
       filter: blur(14px);
     }
 
-    .embers { z-index: -1; overflow: hidden; }
+    .mist-layer {
+      z-index: -2;
+      background:
+        radial-gradient(circle at 15% 88%, rgba(18,52,73,0.22), transparent 26%),
+        radial-gradient(circle at 70% 96%, rgba(138,31,43,0.16), transparent 22%),
+        linear-gradient(180deg, transparent 0%, rgba(18,52,73,0.08) 72%, rgba(8,12,20,0.24) 100%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
 
+    @keyframes drift { from { transform: translateY(0); } to { transform: translateY(10px); } }
+
+    .embers { z-index: -1; overflow: hidden; }
     .ember {
       position: absolute;
       width: 3px;
@@ -78,142 +85,65 @@
       to { transform: translateY(-110px) scale(1.25); opacity: 0.08; }
     }
 
-    .container {
-      width: min(calc(100% - 32px), var(--max));
-      margin: 0 auto;
-    }
+    .container { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
 
-    .navbar-wrap {
-      position: sticky;
-      top: 14px;
-      z-index: 60;
-      padding-top: 14px;
-    }
-
+    .navbar-wrap { position: sticky; top: 14px; z-index: 60; padding-top: 14px; }
     .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 16px 20px;
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background: rgba(5, 9, 18, 0.84);
-      backdrop-filter: blur(16px);
-      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 16px 20px; border-radius: 22px; border: 1px solid var(--line);
+      background: rgba(5, 9, 18, 0.84); backdrop-filter: blur(16px); box-shadow: var(--shadow);
     }
-
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
+      display: flex; align-items: center; gap: 12px; font-weight: 900; white-space: nowrap; letter-spacing: 0.02em;
     }
-
     .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
+      width: 38px; height: 38px; border-radius: 13px; display: grid; place-items: center;
       background: linear-gradient(135deg, rgba(213,177,106,0.2), rgba(138,31,43,0.18));
-      border: 1px solid rgba(213,177,106,0.22);
-      box-shadow: 0 0 18px rgba(213,177,106,0.14);
-      font-size: 1.15rem;
+      border: 1px solid rgba(213,177,106,0.22); box-shadow: 0 0 18px rgba(213,177,106,0.14); font-size: 1.15rem;
     }
-
     .nav-links {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
+      display: flex; gap: 18px; flex-wrap: wrap; align-items: center; justify-content: center;
     }
-
-    .nav-links a {
-      color: var(--muted);
-      font-weight: 700;
-      transition: 0.25s ease;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--gold-soft);
-      text-shadow: 0 0 14px rgba(213, 177, 106, 0.35);
+    .nav-links a { color: var(--muted); font-weight: 700; transition: 0.25s ease; }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--gold-soft); text-shadow: 0 0 14px rgba(213, 177, 106, 0.35);
     }
 
     .btn, .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 13px 20px;
-      border-radius: 14px;
-      font-weight: 800;
-      transition: 0.22s ease;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 13px 20px; border-radius: 14px; font-weight: 800; transition: 0.22s ease; cursor: pointer;
     }
-
     .btn {
-      color: #130d05;
-      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      color: #130d05; background: linear-gradient(135deg, var(--gold-soft), var(--gold));
       box-shadow: 0 0 22px rgba(213, 177, 106, 0.2);
     }
-
     .btn-secondary {
-      color: var(--text);
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--line);
+      color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--line);
     }
 
     .btn:hover,
     .btn-secondary:hover,
     .hero-card:hover,
     .role-card:hover,
-    .branch-card:hover,
-    .duty-card:hover,
-    .council-card:hover,
-    .cta-panel:hover,
-    .info-panel:hover {
+    .member-card:hover,
+    .support-card:hover,
+    .cta-panel:hover {
       transform: translateY(-3px);
     }
 
     .mobile-toggle {
-      display: none;
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 1.15rem;
+      display: none; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03); color: var(--text); cursor: pointer; font-size: 1.15rem;
     }
 
     .hero {
-      min-height: 88vh;
-      display: grid;
-      align-items: center;
-      padding: 86px 0 34px;
+      min-height: 88vh; display: grid; align-items: center; padding: 86px 0 34px;
     }
-
     .hero-grid {
-      display: grid;
-      grid-template-columns: 1.02fr 0.98fr;
-      gap: 28px;
-      align-items: center;
+      display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 28px; align-items: center;
     }
 
-    .hero-copy,
-    .hero-card,
-    .role-card,
-    .branch-card,
-    .duty-card,
-    .council-card,
-    .info-panel,
-    .cta-panel {
+    .hero-copy, .hero-card, .role-card, .member-card, .support-card, .cta-panel {
       position: relative;
       background: linear-gradient(180deg, rgba(10,16,28,0.94), rgba(8,12,22,0.76));
       border: 1px solid var(--line);
@@ -222,404 +152,161 @@
       box-shadow: 0 20px 80px rgba(0, 0, 0, 0.28), 0 0 40px rgba(213, 177, 106, 0.05);
     }
 
-    .hero-copy,
-    .hero-card,
-    .info-panel,
-    .cta-panel { padding: 28px; }
+    .hero-copy, .hero-card, .cta-panel { padding: 28px; }
+    .role-card, .member-card, .support-card { padding: 22px; transition: 0.22s ease; }
 
-    .role-card,
-    .branch-card,
-    .duty-card,
-    .council-card { padding: 22px; transition: 0.22s ease; }
-
-    .hero-copy::before,
-    .hero-card::before,
-    .role-card::before,
-    .branch-card::before,
-    .duty-card::before,
-    .council-card::before,
-    .info-panel::before,
-    .cta-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .hero-copy::before, .hero-card::before, .role-card::before, .member-card::before, .support-card::before, .cta-panel::before {
+      content: ""; position: absolute; inset: 0;
       background: linear-gradient(135deg, rgba(213,177,106,0.08), transparent 32%, rgba(138,31,43,0.08));
       pointer-events: none;
     }
 
     .eyebrow {
-      color: var(--gold-soft);
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      font-size: 0.9rem;
-      margin-bottom: 16px;
+      color: var(--gold-soft); font-weight: 800; letter-spacing: 0.14em; font-size: 0.9rem; margin-bottom: 16px;
     }
-
     .hero h1 {
-      font-size: clamp(3rem, 8vw, 5.8rem);
-      line-height: 0.93;
-      letter-spacing: -0.05em;
-      margin-bottom: 18px;
+      font-size: clamp(3rem, 8vw, 5.8rem); line-height: 0.93; letter-spacing: -0.05em; margin-bottom: 18px;
     }
-
     .hero h1 .shine {
-      color: var(--gold-soft);
-      text-shadow: 0 0 16px rgba(213,177,106,0.36), 0 0 38px rgba(213,177,106,0.12);
+      color: var(--gold-soft); text-shadow: 0 0 16px rgba(213,177,106,0.36), 0 0 38px rgba(213,177,106,0.12);
     }
 
-    .hero p,
-    .role-card p,
-    .branch-card p,
-    .duty-card p,
-    .council-card p,
-    .info-panel p,
-    .info-panel li,
-    .footer-note,
-    .cta-panel p,
-    .panel-text {
-      color: var(--muted);
-      line-height: 1.78;
+    .hero p, .role-card p, .member-card p, .support-card p, .cta-panel p, .footer-note {
+      color: var(--muted); line-height: 1.78;
     }
 
     .hero-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin: 24px 0;
+      display: flex; gap: 14px; flex-wrap: wrap; margin: 24px 0;
     }
-
-    .quick-stats,
-    .top-command,
-    .branch-grid,
-    .duty-grid,
-    .council-grid,
-    .info-grid,
-    .footer-grid {
-      display: grid;
-      gap: 18px;
+    .quick-stats, .featured-grid, .members-grid, .support-grid, .footer-grid {
+      display: grid; gap: 18px;
     }
-
     .quick-stats {
-      grid-template-columns: repeat(3, minmax(120px, 1fr));
-      margin-top: 20px;
+      grid-template-columns: repeat(3, minmax(120px, 1fr)); margin-top: 20px;
     }
-
     .stat {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 18px;
-      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px; padding: 18px; backdrop-filter: blur(14px);
     }
-
-    .stat-value {
-      font-size: 1.45rem;
-      font-weight: 900;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
-
+    .stat-value { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; color: var(--text); }
     .stat-label { color: var(--muted); font-size: 0.92rem; }
 
     .hero-card { padding: 22px; }
-
-    .command-preview {
-      position: relative;
-      aspect-ratio: 4 / 4.2;
-      border-radius: 24px;
-      overflow: hidden;
+    .command-stage {
+      position: relative; aspect-ratio: 4 / 4.2; border-radius: 24px; overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
       background:
-        linear-gradient(to top, rgba(3,8,16,0.82), rgba(3,8,16,0.18)),
-        radial-gradient(circle at 50% 18%, rgba(213,177,106,0.22), transparent 22%),
-        linear-gradient(180deg, rgba(12,18,30,0.95), rgba(9,12,20,0.92));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
+        linear-gradient(to top, rgba(2,6,14,0.86), rgba(2,6,14,0.28)),
+        radial-gradient(circle at 50% 20%, rgba(240,210,156,0.12), transparent 22%),
+        linear-gradient(180deg, rgba(18,52,73,0.95), rgba(8,14,24,0.96));
     }
-
-    .command-preview::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .command-stage::before {
+      content: ""; position: absolute; inset: 0;
       background:
         linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 42px 42px;
-      opacity: 0.3;
+      background-size: 42px 42px; opacity: 0.24;
     }
-
+    .moon {
+      position: absolute; top: 14%; right: 14%; width: 86px; height: 86px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,245,220,0.95), rgba(240,210,156,0.55));
+      box-shadow: 0 0 30px rgba(240,210,156,0.22);
+    }
     .command-stack {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      display: grid;
-      gap: 12px;
+      position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 66%; z-index: 2;
+      display: grid; gap: 14px;
     }
-
-    .stack-rank {
-      padding: 14px 16px;
-      border-radius: 18px;
-      text-align: center;
-      font-weight: 800;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
+    .command-line {
+      padding: 14px 16px; border-radius: 18px; text-align: center; font-weight: 800;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(8px);
     }
-
-    .stack-rank.gold {
-      color: #1d1408;
-      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-      border-color: transparent;
+    .command-line.gold {
+      color: #1d1408; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); border-color: transparent;
       box-shadow: 0 0 18px rgba(213,177,106,0.22);
     }
-
-    .stack-rank.red {
-      background: linear-gradient(135deg, rgba(138,31,43,0.75), rgba(85,18,28,0.85));
-      border-color: rgba(255,255,255,0.04);
+    .stage-overlay {
+      position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 3;
+      padding: 16px; border-radius: 18px; background: rgba(6,10,18,0.74);
+      border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);
     }
-
-    .stack-rank.dark {
-      background: rgba(255,255,255,0.03);
-    }
+    .stage-overlay h3 { margin-bottom: 8px; font-size: 1.18rem; }
 
     section { padding: 46px 0; }
-
     .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
+      display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
+    }
+    .section-head h2 { font-size: clamp(1.9rem, 4vw, 3rem); letter-spacing: -0.04em; }
+    .section-head p { color: var(--muted); max-width: 760px; line-height: 1.72; }
+
+    .featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .role-head, .support-head {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .role-icon, .support-icon {
+      width: 56px; height: 56px; display: grid; place-items: center; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(213,177,106,0.18), rgba(18,52,73,0.18));
+      border: 1px solid rgba(213,177,106,0.14); font-size: 1.42rem;
+      box-shadow: inset 0 0 20px rgba(213,177,106,0.05); flex: 0 0 auto;
+    }
+    .role-title, .support-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 4px; }
+    .role-subtitle, .support-subtitle {
+      color: var(--gold-soft); font-weight: 800; font-size: 0.92rem; text-shadow: 0 0 12px rgba(213,177,106,0.18);
     }
 
-    .section-head h2 {
-      font-size: clamp(1.9rem, 4vw, 3rem);
-      letter-spacing: -0.04em;
+    .members-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 18px; }
+    .member-card { text-align: center; }
+    .head-wrap {
+      width: 82px; height: 82px; margin: 0 auto 14px; border-radius: 20px; padding: 6px;
+      background: linear-gradient(135deg, rgba(213,177,106,0.22), rgba(18,52,73,0.22));
+      border: 1px solid rgba(213,177,106,0.18); box-shadow: 0 0 20px rgba(213,177,106,0.08);
     }
+    .head-wrap img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 14px;
+      image-rendering: pixelated; display: block; background: rgba(255,255,255,0.03);
+    }
+    .member-name { font-size: 1.04rem; font-weight: 900; margin-bottom: 6px; }
+    .member-role { color: var(--gold-soft); font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; }
 
-    .section-head p {
-      color: var(--muted);
-      max-width: 760px;
-      line-height: 1.72;
-    }
-
-    .top-command {
-      grid-template-columns: 1fr;
-    }
-
-    .role-card.featured {
-      border-color: rgba(240,210,156,0.24);
-      box-shadow: 0 0 0 1px rgba(213,177,106,0.08), 0 20px 80px rgba(0,0,0,0.24);
-    }
-
-    .role-head,
-    .branch-head,
-    .duty-head,
-    .council-head {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .role-icon,
-    .branch-icon,
-    .duty-icon,
-    .council-icon {
-      width: 56px;
-      height: 56px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(213,177,106,0.18), rgba(138,31,43,0.14));
-      border: 1px solid rgba(213,177,106,0.14);
-      font-size: 1.42rem;
-      box-shadow: inset 0 0 20px rgba(213,177,106,0.05);
-      flex: 0 0 auto;
-    }
-
-    .role-title,
-    .branch-title,
-    .duty-title,
-    .council-title {
-      font-size: 1.22rem;
-      font-weight: 900;
-      margin-bottom: 4px;
-    }
-
-    .role-subtitle,
-    .branch-subtitle,
-    .duty-subtitle,
-    .council-subtitle {
-      color: var(--gold-soft);
-      font-weight: 800;
-      font-size: 0.92rem;
-      text-shadow: 0 0 12px rgba(213,177,106,0.18);
-    }
+    .support-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
     .chip-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;
     }
-
     .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
+      padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08); color: var(--muted); font-size: 0.82rem; font-weight: 700;
     }
 
-    .branch-grid,
-    .duty-grid,
-    .council-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .cta { text-align: center; padding-bottom: 82px; }
+    .cta-panel h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 14px; letter-spacing: -0.04em; }
 
-    .rank-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 800;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      color: var(--gold-soft);
-    }
-
-    .info-grid {
-      grid-template-columns: 0.95fr 1.05fr;
-      align-items: start;
-    }
-
-    .info-panel ul {
-      padding-left: 18px;
-      margin-top: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 16px;
-    }
-
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 92px 1fr;
-      gap: 16px;
-      align-items: start;
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .timeline-item strong { color: var(--gold-soft); }
-
-    .cta {
-      text-align: center;
-      padding-bottom: 82px;
-    }
-
-    .cta-panel h2 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      margin-bottom: 14px;
-      letter-spacing: -0.04em;
-    }
-
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 26px 0 40px;
-    }
-
-    .footer-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-items: center;
-    }
-
+    footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 26px 0 40px; }
+    .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; display: grid; gap: 18px; }
     .footer-note { color: var(--muted); line-height: 1.7; }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: 0.8s ease;
-    }
-
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal { opacity: 0; transform: translateY(18px); transition: 0.8s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 1080px) {
-      .hero-grid,
-      .branch-grid,
-      .duty-grid,
-      .council-grid,
-      .info-grid,
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .command-preview {
-        aspect-ratio: 16 / 10;
-      }
+      .hero-grid, .featured-grid, .members-grid, .support-grid, .footer-grid { grid-template-columns: 1fr; }
+      .command-stage { aspect-ratio: 16 / 10; }
     }
 
     @media (max-width: 760px) {
-      .navbar {
-        align-items: flex-start;
-        flex-wrap: wrap;
-      }
-
-      .mobile-toggle {
-        display: inline-grid;
-        place-items: center;
-      }
-
-      .nav-links {
-        width: 100%;
-        display: none;
-        flex-direction: column;
-        align-items: flex-start;
-        padding-top: 6px;
-      }
-
+      .navbar { align-items: flex-start; flex-wrap: wrap; }
+      .mobile-toggle { display: inline-grid; place-items: center; }
+      .nav-links { width: 100%; display: none; flex-direction: column; align-items: flex-start; padding-top: 6px; }
       .nav-links.open { display: flex; }
-
-      .hero {
-        min-height: auto;
-        padding-top: 60px;
-      }
-
+      .hero { min-height: auto; padding-top: 60px; }
       .quick-stats { grid-template-columns: 1fr; }
-      .timeline-item { grid-template-columns: 1fr; }
-
-      .hero-copy,
-      .hero-card,
-      .role-card,
-      .branch-card,
-      .duty-card,
-      .council-card,
-      .info-panel,
-      .cta-panel,
-      .stat { padding: 18px; }
+      .hero-copy, .hero-card, .role-card, .member-card, .support-card, .cta-panel, .stat { padding: 18px; }
     }
   </style>
 </head>
 <body>
   <div class="sea-grid"></div>
   <div class="fog-layer"></div>
+  <div class="mist-layer"></div>
   <div class="embers" id="embers"></div>
 
   <div class="container navbar-wrap">
@@ -639,7 +326,6 @@
         <a href="join.html">Join</a>
         <a href="rules.html">Rules</a>
         <a href="build-plans.html">Build Plans</a>
-
       </div>
 
       <div class="nav-right">
@@ -652,59 +338,62 @@
     <div class="hero-grid">
       <div class="hero-copy reveal">
         <div class="eyebrow">THE HIERARCHY OF THE DARK ARMADA</div>
-        <h1>Chain of <span class="shine">command</span></h1>
+        <h1>Command <span class="shine">roster</span></h1>
         <p>
-          The Dark Armada does not drift in chaos. It moves through rank, structure, and authority. From the Tsar at the top to the fleet base below, every action flows through a clear chain of command.
+          The Dark Armada answers to structure, not chaos. This page keeps the full command system intact while showing the actual faces of the current upper leadership through Minecraft heads.
         </p>
 
         <div class="hero-actions">
-          <a href="#top-command" class="btn">View Leadership</a>
-          <a href="#branches" class="btn-secondary">See All Branches</a>
+          <a href="#leadership" class="btn">View Leadership</a>
+          <a href="#support" class="btn-secondary">View Full Structure</a>
         </div>
 
         <div class="quick-stats">
           <div class="stat">
-            <div class="stat-value">Tsar</div>
-            <div class="stat-label">Supreme leader</div>
+            <div class="stat-value">6</div>
+            <div class="stat-label">Headed leadership roles</div>
           </div>
           <div class="stat">
-            <div class="stat-value">4</div>
-            <div class="stat-label">Main ministers</div>
+            <div class="stat-value">12</div>
+            <div class="stat-label">Roles shown total</div>
           </div>
           <div class="stat">
-            <div class="stat-value">Structured</div>
-            <div class="stat-label">Nation hierarchy</div>
+            <div class="stat-value">Live</div>
+            <div class="stat-label">Current roster layout</div>
           </div>
         </div>
       </div>
 
       <div class="hero-card reveal">
-        <div class="command-preview">
+        <div class="command-stage">
+          <div class="moon"></div>
           <div class="command-stack">
-            <div class="stack-rank gold">Tsar</div>
-            <div class="stack-rank red">Ministers</div>
-            <div class="stack-rank dark">Tide Council</div>
-            <div class="stack-rank dark">Dread Guards</div>
-            <div class="stack-rank dark">News Person</div>
-            <div class="stack-rank dark">Folk, Merchants, Fleet</div>
+            <div class="command-line gold">Tsar</div>
+            <div class="command-line">Ministers</div>
+            <div class="command-line">Strategy Advisors</div>
+            <div class="command-line">Council, Guards, Folk, Fleet</div>
+          </div>
+          <div class="stage-overlay">
+            <h3>The command structure at a glance</h3>
+            <p>This version keeps the full hierarchy while highlighting the named leadership with heads and usernames.</p>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <section class="container reveal" id="top-command">
+  <section class="container reveal" id="leadership">
     <div class="section-head">
       <div>
-        <h2>Supreme command</h2>
+        <h2>Named leadership</h2>
       </div>
       <p>
-        At the top of the nation stands the highest authority. Every major action, policy, and national direction ultimately flows through this office.
+        These are the roles with current named members. The page is already wired so you can keep using MCHeads and swap names later if leadership changes.
       </p>
     </div>
 
-    <div class="top-command">
-      <article class="role-card featured">
+    <div class="featured-grid">
+      <article class="role-card">
         <div class="role-head">
           <div class="role-icon">👑</div>
           <div>
@@ -712,216 +401,213 @@
             <div class="role-subtitle">Supreme leader of the Dark Armada</div>
           </div>
         </div>
-        <p>
-          The Tsar is the supreme leader of the Dark Armada. All actions must go through the Tsar. This role stands above every minister, council, guard, and citizen, shaping the will and direction of the nation itself.
-        </p>
-        <div class="chip-row">
-          <span class="chip">Final authority</span>
-          <span class="chip">National direction</span>
-          <span class="chip">Supreme command</span>
+        <p>The highest authority in the nation. The Tsar stands above every office and gives final direction to the Armada as a whole.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/Aesily/100" alt="Aesily head"></div>
+            <div class="member-name">Aesily</div>
+            <div class="member-role">Tsar</div>
+          </article>
+        </div>
+      </article>
+
+      <article class="role-card">
+        <div class="role-head">
+          <div class="role-icon">⚔</div>
+          <div>
+            <div class="role-title">Minister of War</div>
+            <div class="role-subtitle">Military direction and wartime authority</div>
+          </div>
+        </div>
+        <p>Leads the army in wartime situations and shapes the force and direction of the Armada when conflict becomes serious.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/Doomtunnel/100" alt="Doomtunnel head"></div>
+            <div class="member-name">Doomtunnel</div>
+            <div class="member-role">Minister of War</div>
+          </article>
+        </div>
+      </article>
+
+      <article class="role-card">
+        <div class="role-head">
+          <div class="role-icon">🏛</div>
+          <div>
+            <div class="role-title">Minister of Structure</div>
+            <div class="role-subtitle">Build direction and national development</div>
+          </div>
+        </div>
+        <p>Oversees all developments involving builds on Armada land and helps maintain the physical identity of the nation.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/Tixcy54/100" alt="Tixcy head"></div>
+            <div class="member-name">Tixcy</div>
+            <div class="member-role">Minister of Structure</div>
+          </article>
+        </div>
+      </article>
+
+      <article class="role-card">
+        <div class="role-head">
+          <div class="role-icon">🤝</div>
+          <div>
+            <div class="role-title">Minister of Diplomacy</div>
+            <div class="role-subtitle">External relations and inter-nation contact</div>
+          </div>
+        </div>
+        <p>Controls communications with other nations, attends meetings, and helps manage how the Dark Armada is represented abroad.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/ArchieX1/100" alt="ArchieX1 head"></div>
+            <div class="member-name">ArchieX1</div>
+            <div class="member-role">Minister of Diplomacy</div>
+          </article>
+        </div>
+      </article>
+
+      <article class="role-card">
+        <div class="role-head">
+          <div class="role-icon">⛏</div>
+          <div>
+            <div class="role-title">Minister of Resources</div>
+            <div class="role-subtitle">Supply, economy, and production</div>
+          </div>
+        </div>
+        <p>Oversees the farmers, miners, and material strength that fuel the nation and keep the Armada supplied.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/Eboomy/100" alt="Eboomy head"></div>
+            <div class="member-name">Eboomy</div>
+            <div class="member-role">Minister of Resources</div>
+          </article>
+        </div>
+      </article>
+
+      <article class="role-card">
+        <div class="role-head">
+          <div class="role-icon">🧠</div>
+          <div>
+            <div class="role-title">Strategy Advisors</div>
+            <div class="role-subtitle">Strategic guidance and consultation</div>
+          </div>
+        </div>
+        <p>Advisors who support decision-making, strategic thought, and the broader direction of the nation’s planning.</p>
+        <div class="members-grid">
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/alphadarkman/100" alt="Alpha head"></div>
+            <div class="member-name">Alpha</div>
+            <div class="member-role">Strategy Advisor</div>
+          </article>
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/nox/100" alt="nox head"></div>
+            <div class="member-name">nox</div>
+            <div class="member-role">Strategy Advisor</div>
+          </article>
+          <article class="member-card">
+            <div class="head-wrap"><img src="https://mc-heads.net/avatar/greencoconut1/100" alt="greencoocnut head"></div>
+            <div class="member-name">greencoocnut</div>
+            <div class="member-role">Strategy Advisor</div>
+          </article>
         </div>
       </article>
     </div>
   </section>
 
-  <section class="container reveal" id="branches">
+  <section class="container reveal" id="support">
     <div class="section-head">
       <div>
-        <h2>Ministerial command</h2>
+        <h2>Supporting structure</h2>
       </div>
       <p>
-        The ministers handle the core functions of the nation. Each one governs a critical part of Armada life, from diplomacy and building to resources and maybe even war.
+        These roles remain part of the Dark Armada’s command and civic structure, even without named heads displayed on this page.
       </p>
     </div>
 
-    <div class="branch-grid">
-      <article class="branch-card">
-        <div class="branch-head">
-          <div class="branch-icon">🤝</div>
+    <div class="support-grid">
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">🌊</div>
           <div>
-            <div class="branch-title">Minister of Diplomacy</div>
-            <div class="branch-subtitle">Head of diplomacy</div>
+            <div class="support-title">Tide Council</div>
+            <div class="support-subtitle">Political body of the Dark Armada</div>
           </div>
         </div>
-        <p>
-          Controls all communications with other nations, goes to meetings, and deals with foreign affairs. This role represents the Dark Armada abroad and shapes how others see the nation.
-        </p>
-        <span class="rank-tag">External relations</span>
+        <p>The political party and organized political force of the nation.</p>
       </article>
 
-      <article class="branch-card">
-        <div class="branch-head">
-          <div class="branch-icon">🏛</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">🛡</div>
           <div>
-            <div class="branch-title">Minister of Architecture</div>
-            <div class="branch-subtitle">Overseer of development</div>
+            <div class="support-title">The Dread Guards</div>
+            <div class="support-subtitle">Elite protectors of the hierarchy</div>
           </div>
         </div>
-        <p>
-          Oversees all developments involving builds on Armada land. If construction happens under the banner of the nation, approval and direction pass through this minister.
-        </p>
-        <span class="rank-tag">Build authority</span>
+        <p>An elite team of fighters whose purpose is to protect the hierarchy and win wars for the nation.</p>
       </article>
 
-      <article class="branch-card">
-        <div class="branch-head">
-          <div class="branch-icon">⛏</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">📰</div>
           <div>
-            <div class="branch-title">Minister of Resources</div>
-            <div class="branch-subtitle">Fuel of the empire</div>
+            <div class="support-title">The News Person</div>
+            <div class="support-subtitle">Voice of information</div>
           </div>
         </div>
-        <p>
-          Holds authority over farmers, miners, and essential supply work. This is one of the most important jobs in the nation because resources ultimately fuel the empire.
-        </p>
-        <span class="rank-tag">Economic backbone</span>
+        <p>Keeps citizens updated on politics, major events, and important national developments.</p>
       </article>
 
-      <article class="branch-card">
-        <div class="branch-head">
-          <div class="branch-icon">⚔</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">🏗</div>
           <div>
-            <div class="branch-title">Minister of War</div>
-            <div class="branch-subtitle">Brain of wartime operations</div>
+            <div class="support-title">Building Folk</div>
+            <div class="support-subtitle">Creators of Armada land</div>
           </div>
         </div>
-        <p>
-          Leads the army in wartime situations and plans operations when it comes to defending the Dark Armada. This office is central to strategy, defense, and organized conflict.
-        </p>
-        <span class="rank-tag">Military strategy</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="container reveal" id="council">
-    <div class="section-head">
-      <div>
-        <h2>Political and elite bodies</h2>
-      </div>
-      <p>
-        Beyond the ministers, the Dark Armada also relies on political structure and elite force. These groups protect the order of the nation and reinforce its authority.
-      </p>
-    </div>
-
-    <div class="council-grid">
-      <article class="council-card">
-        <div class="council-head">
-          <div class="council-icon">🌊</div>
-          <div>
-            <div class="council-title">Tide Council</div>
-            <div class="council-subtitle">Political party of the Dark Armada</div>
-          </div>
-        </div>
-        <p>
-          The Tide Council serves as the political body of the Dark Armada. It represents the organized political force behind national decisions, alignment, and direction.
-        </p>
-        <span class="rank-tag">Political authority</span>
+        <p>Contribute to major builds and help shape the visual power and legacy of the nation.</p>
       </article>
 
-      <article class="council-card">
-        <div class="council-head">
-          <div class="council-icon">🛡</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">🌾</div>
           <div>
-            <div class="council-title">The Dread Guards</div>
-            <div class="council-subtitle">Elite protectors of the hierarchy</div>
+            <div class="support-title">Farming Folk</div>
+            <div class="support-subtitle">Feed the nation</div>
           </div>
         </div>
-        <p>
-          The elite team of fighters whose main goal is to protect the hierarchy and win wars for the nation. They are the hardened edge of the Dark Armada’s internal defense and military prestige.
-        </p>
-        <span class="rank-tag">Elite military body</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="container reveal" id="duties">
-    <div class="section-head">
-      <div>
-        <h2>Special offices and common roles</h2>
-      </div>
-      <p>
-        Not every role sits at the top, but each one contributes to the strength of the nation. These offices and common branches make everyday Armada life possible.
-      </p>
-    </div>
-
-    <div class="duty-grid">
-      <article class="duty-card">
-        <div class="duty-head">
-          <div class="duty-icon">📰</div>
-          <div>
-            <div class="duty-title">The News Person</div>
-            <div class="duty-subtitle">Voice of information</div>
-          </div>
-        </div>
-        <p>
-          The main goal of this job is to ensure every citizen is up to date on Dark Armada politics and events. This office keeps the nation informed and aligned.
-        </p>
-        <span class="rank-tag">Public communication</span>
+        <p>Harvest crops and maintain the food supply that keeps the Armada stable and growing.</p>
       </article>
 
-      <article class="duty-card">
-        <div class="duty-head">
-          <div class="duty-icon">🏗</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">💰</div>
           <div>
-            <div class="duty-title">Building Folk</div>
-            <div class="duty-subtitle">Creators of Armada land</div>
+            <div class="support-title">Merchants</div>
+            <div class="support-subtitle">Trade and exchange</div>
           </div>
         </div>
-        <p>
-          Contribute to amazing builds on Armada land. These are the hands that physically shape the visual power and legacy of the nation.
-        </p>
-        <span class="rank-tag">Development branch</span>
+        <p>Handle trade with other nations and support economic interaction under national oversight.</p>
       </article>
 
-      <article class="duty-card">
-        <div class="duty-head">
-          <div class="duty-icon">🌾</div>
+      <article class="support-card">
+        <div class="support-head">
+          <div class="support-icon">⚓</div>
           <div>
-            <div class="duty-title">Farming Folk</div>
-            <div class="duty-subtitle">Feed the nation</div>
+            <div class="support-title">Fleet</div>
+            <div class="support-subtitle">Base role for accepted members</div>
           </div>
         </div>
-        <p>
-          Fuel the nation by harvesting crops and supporting the resource base that keeps the Armada stable, fed, and growing. - if ur reading this u found alphas special easter egg
-        </p>
-        <span class="rank-tag">Food production</span>
-      </article>
-
-      <article class="duty-card">
-        <div class="duty-head">
-          <div class="duty-icon">💰</div>
-          <div>
-            <div class="duty-title">Merchants</div>
-            <div class="duty-subtitle">Trade and communication</div>
-          </div>
-        </div>
-        <p>
-          Trade with other nations, but remain under the Minister of Resources and communication. Merchants help expand influence through economy and exchange.
-        </p>
-        <span class="rank-tag">Trade branch</span>
-      </article>
-
-      <article class="duty-card">
-        <div class="duty-head">
-          <div class="duty-icon">⚓</div>
-          <div>
-            <div class="duty-title">Fleet</div>
-            <div class="duty-subtitle">Base role for accepted plebians</div>
-          </div>
-        </div>
-        <p>
-          The fleet serves as the base role for accepted plebians. This is the broad layer of the nation that new accepted members stand within before rising further.
-        </p>
-        <span class="rank-tag">Foundational membership</span>
+        <p>The foundational accepted body of the nation beneath the higher offices and special branches.</p>
       </article>
     </div>
   </section>
 
   <section class="container cta reveal">
     <div class="cta-panel">
-      <h2>Will you rise through the hierarchy?</h2>
+      <h2>The nation answers to real people and real structure.</h2>
       <p>
-        The Dark Armada rewards loyalty, order, and contribution. Every role has its purpose, and every citizen serves beneath a structure that gives the nation its power.
+        This version keeps the full hierarchy visible while giving the upper leadership an actual roster with heads, names, and roles.
       </p>
       <div class="hero-actions" style="justify-content: center; margin-bottom: 0;">
         <a href="join.html" class="btn">Join the Armada</a>
@@ -936,7 +622,7 @@
         <span class="brand-mark">☠</span>
         <span>The Dark Armada</span>
       </div>
-      <p class="footer-note">Command page for the full hierarchy, political structure, elite force, and core working roles of the nation.</p>
+      <p class="footer-note">Command roster page for the leadership, advisors, and supporting structure of the Dark Armada.</p>
       <p class="footer-note" style="text-align: right;">© 2026 The Dark Armada. All rights reserved.</p>
     </div>
   </footer>
@@ -957,9 +643,7 @@
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('show');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('show');
       });
     }, { threshold: 0.16 });
     reveals.forEach(section => observer.observe(section));
