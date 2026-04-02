@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dark Armada | Rules</title>
+  <style>
+    :root {
+      --text: #f4f1e8;
+      --muted: #b1b6c7;
+      --line: rgba(190, 166, 115, 0.18);
+      --gold: #d5b16a;
+      --gold-soft: #f0d29c;
+      --crimson: #8a1f2b;
+      --sea: #123449;
+      --shadow: 0 0 34px rgba(213, 177, 106, 0.12);
+      --max: 1260px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(213, 177, 106, 0.08), transparent 18%),
+        radial-gradient(circle at 82% 24%, rgba(18, 52, 73, 0.22), transparent 22%),
+        linear-gradient(180deg, #02040a 0%, #06080f 38%, #091725 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .sea-grid, .fog-layer, .embers, .mist-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .sea-grid {
+      z-index: -4;
+      background-image:
+        linear-gradient(rgba(213,177,106,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(213,177,106,0.03) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 96%);
+    }
+
+    .fog-layer {
+      z-index: -3;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04), transparent 22%),
+        radial-gradient(circle at 80% 60%, rgba(255,255,255,0.03), transparent 24%),
+        linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 70%, transparent 100%);
+      filter: blur(14px);
+    }
+
+    .mist-layer {
+      z-index: -2;
+      background:
+        radial-gradient(circle at 15% 88%, rgba(18,52,73,0.22), transparent 26%),
+        radial-gradient(circle at 70% 96%, rgba(138,31,43,0.16), transparent 22%),
+        linear-gradient(180deg, transparent 0%, rgba(18,52,73,0.08) 72%, rgba(8,12,20,0.24) 100%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift { from { transform: translateY(0); } to { transform: translateY(10px); } }
+
+    .embers { z-index: -1; overflow: hidden; }
+    .ember {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(240, 210, 156, 0.85);
+      box-shadow: 0 0 10px rgba(213, 177, 106, 0.48);
+      animation: driftUp linear infinite;
+    }
+
+    @keyframes driftUp {
+      from { transform: translateY(0) scale(1); opacity: 0.15; }
+      50% { opacity: 1; }
+      to { transform: translateY(-110px) scale(1.25); opacity: 0.08; }
+    }
+
+    .container { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+
+    .navbar-wrap { position: sticky; top: 14px; z-index: 60; padding-top: 14px; }
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 16px 20px; border-radius: 22px; border: 1px solid var(--line);
+      background: rgba(5, 9, 18, 0.84); backdrop-filter: blur(16px); box-shadow: var(--shadow);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px; font-weight: 900; white-space: nowrap; letter-spacing: 0.02em;
+    }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 13px; display: grid; place-items: center;
+      background: linear-gradient(135deg, rgba(213,177,106,0.2), rgba(138,31,43,0.18));
+      border: 1px solid rgba(213,177,106,0.22); box-shadow: 0 0 18px rgba(213,177,106,0.14); font-size: 1.15rem;
+    }
+    .nav-links {
+      display: flex; gap: 18px; flex-wrap: wrap; align-items: center; justify-content: center;
+    }
+    .nav-links a { color: var(--muted); font-weight: 700; transition: 0.25s ease; }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--gold-soft); text-shadow: 0 0 14px rgba(213, 177, 106, 0.35);
+    }
+
+    .btn, .btn-secondary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 13px 20px; border-radius: 14px; font-weight: 800; transition: 0.22s ease; cursor: pointer;
+    }
+    .btn {
+      color: #130d05; background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      box-shadow: 0 0 22px rgba(213, 177, 106, 0.2);
+    }
+    .btn-secondary {
+      color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+    }
+
+    .btn:hover,
+    .btn-secondary:hover,
+    .hero-card:hover,
+    .rule-card:hover,
+    .cta-panel:hover,
+    .faq-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .mobile-toggle {
+      display: none; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03); color: var(--text); cursor: pointer; font-size: 1.15rem;
+    }
+
+    .hero {
+      min-height: 88vh; display: grid; align-items: center; padding: 86px 0 34px;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.03fr 0.97fr; gap: 28px; align-items: center;
+    }
+
+    .hero-copy, .hero-card, .rule-card, .faq-card, .cta-panel {
+      position: relative;
+      background: linear-gradient(180deg, rgba(10,16,28,0.94), rgba(8,12,22,0.76));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.28), 0 0 40px rgba(213, 177, 106, 0.05);
+    }
+
+    .hero-copy, .hero-card, .cta-panel { padding: 28px; }
+    .rule-card, .faq-card { padding: 22px; transition: 0.22s ease; }
+
+    .hero-copy::before, .hero-card::before, .rule-card::before, .faq-card::before, .cta-panel::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(213,177,106,0.08), transparent 32%, rgba(138,31,43,0.08));
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.1rem, 8vw, 5.8rem); line-height: 0.93; letter-spacing: -0.05em; margin-bottom: 18px;
+    }
+    .hero h1 .shine {
+      color: var(--gold-soft); text-shadow: 0 0 16px rgba(213,177,106,0.36), 0 0 38px rgba(213,177,106,0.12);
+    }
+    .eyebrow {
+      color: var(--gold-soft); font-weight: 800; letter-spacing: 0.14em; font-size: 0.9rem; margin-bottom: 16px;
+    }
+
+    .hero p, .rule-card p, .faq-card p, .cta-panel p, .footer-note {
+      color: var(--muted); line-height: 1.78;
+    }
+
+    .hero-actions {
+      display: flex; gap: 14px; flex-wrap: wrap; margin: 24px 0;
+    }
+    .quick-stats, .rules-grid, .faq-grid, .footer-grid {
+      display: grid; gap: 18px;
+    }
+    .quick-stats {
+      grid-template-columns: repeat(3, minmax(120px, 1fr)); margin-top: 20px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px; padding: 18px; backdrop-filter: blur(14px);
+    }
+    .stat-value { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; color: var(--text); }
+    .stat-label { color: var(--muted); font-size: 0.92rem; }
+
+    .hero-card { padding: 22px; }
+    .law-stage {
+      position: relative; aspect-ratio: 4 / 4.2; border-radius: 24px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(to top, rgba(2,6,14,0.86), rgba(2,6,14,0.28)),
+        radial-gradient(circle at 50% 20%, rgba(240,210,156,0.12), transparent 22%),
+        linear-gradient(180deg, rgba(18,52,73,0.95), rgba(8,14,24,0.96));
+    }
+    .law-stage::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 42px 42px; opacity: 0.24;
+    }
+    .moon {
+      position: absolute; top: 14%; right: 14%; width: 86px; height: 86px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,245,220,0.95), rgba(240,210,156,0.55));
+      box-shadow: 0 0 30px rgba(240,210,156,0.22);
+    }
+    .law-stack {
+      position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 62%; z-index: 2;
+      display: grid; gap: 14px;
+    }
+    .law-line {
+      padding: 14px 16px; border-radius: 18px; text-align: center; font-weight: 800;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+    }
+    .law-line.gold {
+      color: #1d1408; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); border-color: transparent;
+      box-shadow: 0 0 18px rgba(213,177,106,0.22);
+    }
+    .stage-overlay {
+      position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 3;
+      padding: 16px; border-radius: 18px; background: rgba(6,10,18,0.74);
+      border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);
+    }
+    .stage-overlay h3 { margin-bottom: 8px; font-size: 1.18rem; }
+
+    section { padding: 46px 0; }
+    .section-head {
+      display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
+    }
+    .section-head h2 { font-size: clamp(1.9rem, 4vw, 3rem); letter-spacing: -0.04em; }
+    .section-head p { color: var(--muted); max-width: 760px; line-height: 1.72; }
+
+    .rules-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .rule-head, .faq-head {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .rule-icon, .faq-icon {
+      width: 56px; height: 56px; display: grid; place-items: center; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(213,177,106,0.18), rgba(18,52,73,0.18));
+      border: 1px solid rgba(213,177,106,0.14); font-size: 1.2rem; font-weight: 900;
+      box-shadow: inset 0 0 20px rgba(213,177,106,0.05); flex: 0 0 auto;
+      color: var(--gold-soft);
+    }
+    .rule-title, .faq-title {
+      font-size: 1.2rem; font-weight: 900; margin-bottom: 4px;
+    }
+    .rule-subtitle, .faq-subtitle {
+      color: var(--gold-soft); font-weight: 800; font-size: 0.92rem; text-shadow: 0 0 12px rgba(213,177,106,0.18);
+    }
+
+    .faq-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .cta { text-align: center; padding-bottom: 82px; }
+    .cta-panel h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 14px; letter-spacing: -0.04em; }
+
+    footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 26px 0 40px; }
+    .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; display: grid; gap: 18px; }
+    .footer-note { color: var(--muted); line-height: 1.7; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: 0.8s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1080px) {
+      .hero-grid, .rules-grid, .faq-grid, .footer-grid { grid-template-columns: 1fr; }
+      .law-stage { aspect-ratio: 16 / 10; }
+    }
+
+    @media (max-width: 760px) {
+      .navbar { align-items: flex-start; flex-wrap: wrap; }
+      .mobile-toggle { display: inline-grid; place-items: center; }
+      .nav-links { width: 100%; display: none; flex-direction: column; align-items: flex-start; padding-top: 6px; }
+      .nav-links.open { display: flex; }
+      .hero { min-height: auto; padding-top: 60px; }
+      .quick-stats { grid-template-columns: 1fr; }
+      .hero-copy, .hero-card, .rule-card, .faq-card, .cta-panel, .stat { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sea-grid"></div>
+  <div class="fog-layer"></div>
+  <div class="mist-layer"></div>
+  <div class="embers" id="embers"></div>
+
+  <div class="container navbar-wrap">
+    <nav class="navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">☠</span>
+        <span>The Dark Armada</span>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle">☰</button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="command.html">Command</a>
+        <a href="fleet.html">Fleet</a>
+        <a href="lore.html">Lore</a>
+        <a href="join.html">Join</a>
+        <a href="rules.html" class="active">Rules</a>
+        <a href="build-plans.html">Build Plans</a>
+      </div>
+
+      <div class="nav-right">
+        <a href="join.html" class="btn">Enlist</a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="hero container">
+    <div class="hero-grid">
+      <div class="hero-copy reveal">
+        <div class="eyebrow">LAW • DISCIPLINE • EXPECTATION</div>
+        <h1>The <span class="shine">rules</span></h1>
+        <p>
+          The Dark Armada is a disciplined and respected force. These are the actual rules of the nation, written clearly so every member knows the standard they are expected to uphold.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#rules-list" class="btn">Read the Rules</a>
+          <a href="join.html" class="btn-secondary">Return to Join</a>
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat">
+            <div class="stat-value">21</div>
+            <div class="stat-label">Rules in effect</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Discipline</div>
+            <div class="stat-label">Expected from all</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Final</div>
+            <div class="stat-label">Leadership discipline calls</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal">
+        <div class="law-stage">
+          <div class="moon"></div>
+          <div class="law-stack">
+            <div class="law-line gold">Code of the Dark Armada</div>
+            <div class="law-line">Respect the hierarchy</div>
+            <div class="law-line">Protect the nation</div>
+            <div class="law-line">Act accordingly</div>
+          </div>
+          <div class="stage-overlay">
+            <h3>The code that holds the nation together</h3>
+            <p>These rules are direct and meant to be followed by everyone under the banner.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="container reveal" id="rules-list">
+    <div class="section-head">
+      <div>
+        <h2>Code of the Dark Armada</h2>
+      </div>
+    </div>
+
+    <div class="rules-grid">
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">1</div><div><div class="rule-title">Respect all members</div><div class="rule-subtitle">No harassment or personal attacks</div></div></div><p>Treat all members with respect at all times. No harassment, discrimination, or personal attacks.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">2</div><div><div class="rule-title">Keep disagreements civil</div><div class="rule-subtitle">Handle issues maturely</div></div></div><p>Keep disagreements civil and handle issues maturely.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">3</div><div><div class="rule-title">Do not spam</div><div class="rule-subtitle">Protect chat and voice</div></div></div><p>Do not spam, mic spam, or intentionally disrupt chat or voice channels.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">4</div><div><div class="rule-title">Follow leadership in events</div><div class="rule-subtitle">Events, raids, and battles</div></div></div><p>Follow instructions from leadership during events, raids, and battles.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">5</div><div><div class="rule-title">No excessive toxicity</div><div class="rule-subtitle">Competitive is fine, disrespect is not</div></div></div><p>Avoid excessive toxicity — competitive behaviour is fine, disrespect is not.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">6</div><div><div class="rule-title">Respect the chain of command</div><div class="rule-subtitle">Leadership decisions matter</div></div></div><p>Respect the chain of command and leadership decisions.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">7</div><div><div class="rule-title">Obey combat orders immediately</div><div class="rule-subtitle">Critical moments require speed</div></div></div><p>Orders given during combat situations must be followed immediately.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">8</div><div><div class="rule-title">Raise concerns at the right time</div><div class="rule-subtitle">Not during critical moments</div></div></div><p>Raise concerns respectfully after events, not during critical moments.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">9</div><div><div class="rule-title">Do not leak information</div><div class="rule-subtitle">Keep internal matters inside</div></div></div><p>Do not leak information, plans, coordinates, or internal discussions.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">10</div><div><div class="rule-title">No spying or betrayal</div><div class="rule-subtitle">No alts for other nations</div></div></div><p>No spying, alts for other nations, or betrayal of the crew.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">11</div><div><div class="rule-title">Use the correct channels</div><div class="rule-subtitle">Communication stays organized</div></div></div><p>Use the correct channels for their intended purpose.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">12</div><div><div class="rule-title">Keep important channels clear</div><div class="rule-subtitle">Listen to callouts</div></div></div><p>Keep important channels clear during events and listen to callouts.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">13</div><div><div class="rule-title">Do not start wars alone</div><div class="rule-subtitle">Leadership approval required</div></div></div><p>Do not start wars or conflicts without leadership approval.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">14</div><div><div class="rule-title">Respect alliances and treaties</div><div class="rule-subtitle">Honor agreements</div></div></div><p>Respect alliances, treaties, and protection agreements.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">15</div><div><div class="rule-title">Represent the Armada professionally</div><div class="rule-subtitle">Especially with other nations</div></div></div><p>Represent the Dark Armada professionally when interacting with other nations.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">16</div><div><div class="rule-title">All members must contribute</div><div class="rule-subtitle">Everyone strengthens the nation</div></div></div><p>All members must contribute (PvP, building, farming, scouting, etc.).</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">17</div><div><div class="rule-title">Rank progression is earned</div><div class="rule-subtitle">By activity, effort, and teamwork</div></div></div><p>Activity, effort, and teamwork determine rank progression.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">18</div><div><div class="rule-title">Cooperate with your team</div><div class="rule-subtitle">Follow instructions</div></div></div><p>Follow instructions and cooperate with your team at all times.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">19</div><div><div class="rule-title">Minor rule breaks</div><div class="rule-subtitle">Warnings first, punishment if repeated</div></div></div><p>Minor rule breaks may result in warnings; repeated offences lead to punishment.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">20</div><div><div class="rule-title">Serious offences</div><div class="rule-subtitle">Immediate removal</div></div></div><p>Serious offences (leaks, betrayal, sabotage) will result in immediate removal.</p></article>
+      <article class="rule-card"><div class="rule-head"><div class="rule-icon">21</div><div><div class="rule-title">Discipline decisions are final</div><div class="rule-subtitle">Leadership has final say</div></div></div><p>Leadership decisions regarding discipline are final.</p></article>
+    </div>
+  </section>
+
+  <section class="container reveal">
+    <div class="section-head">
+      <div>
+        <h2>Quick clarification</h2>
+      </div>
+      <p>
+      </p>
+    </div>
+
+    <div class="faq-grid">
+      <article class="faq-card">
+        <div class="faq-head"><div class="faq-icon">☠</div><div><div class="faq-title">Act accordingly</div><div class="faq-subtitle">The standard is simple</div></div></div>
+        <p>Remember: we are a disciplined and respected force — act accordingly.</p>
+      </article>
+      <article class="faq-card">
+        <div class="faq-head"><div class="faq-icon">❓</div><div><div class="faq-title">Can these rules change?</div><div class="faq-subtitle">Yes, if leadership decides</div></div></div>
+        <p>The rules can be refined over time, but the current code is what every member is expected to follow right now.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="container cta reveal">
+    <div class="cta-panel">
+      <h2>Discipline is part of the identity.</h2>
+      <p>
+        The Dark Armada does not keep standards just for appearance. It keeps them because order, loyalty, and discipline are part of what give the nation its weight.
+      </p>
+      <div class="hero-actions" style="justify-content: center; margin-bottom: 0;">
+        <a href="join.html" class="btn">Return to Join</a>
+        <a href="command.html" class="btn-secondary">View Command</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="brand">
+        <span class="brand-mark">☠</span>
+        <span>The Dark Armada</span>
+      </div>
+      <p class="footer-note">Rules page for the actual code, standards, and discipline expected under the banner of the Dark Armada.</p>
+      <p class="footer-note" style="text-align: right;">© 2026 The Dark Armada. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const embersContainer = document.getElementById('embers');
+    for (let i = 0; i < 38; i++) {
+      const ember = document.createElement('span');
+      ember.className = 'ember';
+      ember.style.left = Math.random() * 100 + '%';
+      ember.style.top = Math.random() * 100 + '%';
+      ember.style.animationDuration = 6 + Math.random() * 8 + 's';
+      ember.style.animationDelay = Math.random() * 6 + 's';
+      ember.style.opacity = Math.random();
+      embersContainer.appendChild(ember);
+    }
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.16 });
+    reveals.forEach(section => observer.observe(section));
+
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMenu = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dark Armada</title>
+  <style>
+    :root {
+      --bg: #06080f;
+      --panel: rgba(12, 18, 30, 0.76);
+      --panel-strong: rgba(8, 14, 24, 0.94);
+      --text: #f4f1e8;
+      --muted: #b1b6c7;
+      --line: rgba(190, 166, 115, 0.18);
+      --gold: #d5b16a;
+      --gold-soft: #f0d29c;
+      --crimson: #8a1f2b;
+      --sea: #123449;
+      --shadow: 0 0 34px rgba(213, 177, 106, 0.12);
+      --max: 1240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      cursor: url('https://cur.cursors-4u.net/cursors/cur-9/cur817.cur'), auto;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(213, 177, 106, 0.08), transparent 18%),
+        radial-gradient(circle at 82% 24%, rgba(18, 52, 73, 0.22), transparent 22%),
+        linear-gradient(180deg, #02040a 0%, #06080f 38%, #0a1220 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .sea-grid, .fog-layer, .embers {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .sea-grid {
+      background-image:
+        linear-gradient(rgba(213,177,106,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(213,177,106,0.03) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 96%);
+    }
+
+    .fog-layer {
+      z-index: -2;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04), transparent 22%),
+        radial-gradient(circle at 80% 60%, rgba(255,255,255,0.03), transparent 24%),
+        linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 70%, transparent 100%);
+      filter: blur(14px);
+    }
+    /* 🌊 Waves */
+.waves {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.fog-layer1 {
+  opacity: 0.5;
+}
+
+.fog-layer2 {
+  opacity: 0.8;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(18,52,73,0.4), transparent 70%);
+  opacity: 0.25;
+}
+
+.wave1 { animation: waveMove 20s linear infinite; }
+.wave2 { animation: waveMove 30s linear infinite reverse; opacity: 0.18; }
+.wave3 { animation: waveMove 40s linear infinite; opacity: 0.12; }
+
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* 🌫 Fog */
+.fog {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  pointer-events: none;
+  z-index: 0;
+}
+.lightning {
+  position: fixed;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.fog-layer1,
+.fog-layer2 {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+  filter: blur(20px);
+}
+
+.fog-layer1 {
+  animation: fogMove 60s linear infinite;
+}
+
+.fog-layer2 {
+  animation: fogMove 90s linear infinite reverse;
+  opacity: 0.6;
+}
+
+@keyframes fogMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+    .embers { z-index: -1; overflow: hidden; }
+
+    .ember {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(240, 210, 156, 0.85);
+      box-shadow: 0 0 10px rgba(213, 177, 106, 0.48);
+      animation: driftUp linear infinite;
+    }
+
+    @keyframes driftUp {
+      from { transform: translateY(0) scale(1); opacity: 0.15; }
+      50% { opacity: 1; }
+      to { transform: translateY(-110px) scale(1.25); opacity: 0.08; }
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+    .bg-glow::before,
+.bg-glow::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  z-index: -2;
+}
+
+.bg-glow::before {
+  background: #d5b16a;
+  top: 10%;
+  left: -10%;
+  animation: driftGlow 20s ease-in-out infinite alternate;
+}
+
+.bg-glow::after {
+  background: #123449;
+  bottom: 0;
+  right: -10%;
+  animation: driftGlow 25s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes driftGlow {
+  from { transform: translate(0,0); }
+  to { transform: translate(40px, 60px); }
+}
+
+    .navbar-wrap {
+      position: sticky;
+      top: 14px;
+      z-index: 60;
+      padding-top: 14px;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(5, 9, 18, 0.84);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(213,177,106,0.2), rgba(138,31,43,0.18));
+      border: 1px solid rgba(213,177,106,0.22);
+      box-shadow: 0 0 18px rgba(213,177,106,0.14);
+      font-size: 1.15rem;
+    }
+    .embers {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ember {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(240, 210, 156, 0.8);
+  box-shadow: 0 0 10px rgba(213, 177, 106, 0.6);
+  animation: emberFloat linear infinite;
+}
+
+@keyframes emberFloat {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-120px) scale(1.3);
+    opacity: 0.05;
+  }
+}
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 700;
+      transition: 0.25s ease;
+    }
+
+@keyframes sail {
+  from { transform: translateX(0); }
+  to { transform: translateX(120vw); }
+}
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--gold-soft);
+      text-shadow: 0 0 14px rgba(213, 177, 106, 0.35);
+    }
+
+    .btn, .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      transition: 0.22s ease;
+      cursor: pointer;
+    }
+
+    .btn {
+      color: #130d05;
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      box-shadow: 0 0 22px rgba(213, 177, 106, 0.2);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .btn:hover,
+    .btn-secondary:hover,
+    .hub-card:hover,
+    .preview-card:hover,
+    .info-panel:hover,
+    .hero-card:hover,
+    .mini-card:hover,
+    .cta-panel:hover {
+      transform: translateY(-3px);
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.15rem;
+    }
+
+    .hero {
+      min-height: 94vh;
+      display: grid;
+      align-items: center;
+      padding: 86px 0 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .hero-copy,
+    .hero-card,
+    .hub-card,
+    .preview-card,
+    .info-panel,
+    .mini-card,
+    .cta-panel {
+      position: relative;
+      background: linear-gradient(180deg, rgba(10,16,28,0.94), rgba(8,12,22,0.76));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.28), 0 0 40px rgba(213, 177, 106, 0.05);
+    }
+
+    .hero-copy,
+    .hero-card,
+    .info-panel,
+    .cta-panel {
+      padding: 28px;
+    }
+
+    .hub-card,
+    .preview-card,
+    .mini-card {
+      padding: 22px;
+      transition: 0.22s ease;
+    }
+
+    .hero-copy::before,
+    .hero-card::before,
+    .hub-card::before,
+    .preview-card::before,
+    .info-panel::before,
+    .mini-card::before,
+    .cta-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(213,177,106,0.08), transparent 32%, rgba(138,31,43,0.08));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: var(--gold-soft);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.2rem, 9vw, 6.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 .shine {
+      color: var(--gold-soft);
+      text-shadow: 0 0 16px rgba(213,177,106,0.36), 0 0 38px rgba(213,177,106,0.12);
+    }
+
+    .hero p,
+    .hub-card p,
+    .preview-card p,
+    .info-panel p,
+    .info-panel li,
+    .preview-overlay p,
+    .footer-note,
+    .mini-card p,
+    .cta-panel p {
+      color: var(--muted);
+      line-height: 1.78;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 24px 0;
+    }
+
+    .quick-stats,
+    .hub-grid,
+    .preview-grid,
+    .mini-grid,
+    .info-grid,
+    .footer-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .quick-stats {
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      margin-top: 20px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 18px;
+      backdrop-filter: blur(14px);
+    }
+
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hero-card { padding: 22px; }
+
+    .fleet-preview {
+      position: relative;
+      aspect-ratio: 4 / 4.4;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(to top, rgba(3,8,16,0.8), rgba(3,8,16,0.18)),
+        url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80') center/cover;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .preview-overlay {
+      width: 100%;
+      background: rgba(7, 11, 20, 0.76);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(213,177,106,0.14);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .preview-overlay h3 {
+      font-size: 1.24rem;
+      margin-bottom: 8px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    section { padding: 46px 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.72;
+    }
+
+    .hub-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .hub-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hub-card {
+      cursor: pointer;
+    }
+
+    .hub-icon,
+    .preview-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(213,177,106,0.18), rgba(138,31,43,0.14));
+      border: 1px solid rgba(213,177,106,0.14);
+      font-size: 1.38rem;
+      box-shadow: inset 0 0 20px rgba(213,177,106,0.05);
+    }
+
+    .hub-card h3,
+    .preview-card h3,
+    .info-panel h3,
+    .mini-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.14rem;
+    }
+
+    .card-cta {
+      display: inline-block;
+      margin-top: 16px;
+      font-weight: 800;
+      color: var(--gold-soft);
+      text-shadow: 0 0 12px rgba(213, 177, 106, 0.22);
+      transition: transform 0.2s ease;
+    }
+
+    .hub-card:hover .card-cta {
+      transform: translateX(6px);
+    }
+
+    .preview-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--gold-soft);
+    }
+
+    .mini-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .info-grid {
+      grid-template-columns: 0.95fr 1.05fr;
+      align-items: start;
+    }
+
+    .info-panel ul {
+      padding-left: 18px;
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .timeline-item strong {
+      color: var(--gold-soft);
+    }
+
+    .cta {
+      text-align: center;
+      padding-bottom: 82px;
+    }
+
+    .cta-panel h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 14px;
+      letter-spacing: -0.04em;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 26px 0 40px;
+    }
+
+    .footer-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: center;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: 0.8s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .hub-grid,
+      .preview-grid,
+      .mini-grid,
+      .info-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .fleet-preview {
+        aspect-ratio: 16 / 10;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .navbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .mobile-toggle {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .nav-links {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 6px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 60px;
+      }
+
+      .quick-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .hero-card,
+      .hub-card,
+      .preview-card,
+      .info-panel,
+      .mini-card,
+      .cta-panel,
+      .stat {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="lightning" id="lightning"></div>
+    <body class="bg-glow"></body>
+    <!-- 🌊 Waves -->
+<div class="waves">
+  <div class="wave wave1"></div>
+  <div class="wave wave2"></div>
+  <div class="wave wave3"></div>
+</div>
+<div class="embers" id="embers"></div>
+
+<!-- 🌫 Fog -->
+<div class="fog">
+  <div class="fog-layer1"></div>
+  <div class="fog-layer2"></div>
+</div>
+  <div class="sea-grid"></div>
+  <div class="fog-layer"></div>
+  <div class="embers" id="embers"></div>
+
+  <div class="container navbar-wrap">
+    <nav class="navbar">
+      <a href="#home" class="brand">
+        <span class="brand-mark">☠</span>
+        <span>The Dark Armada</span>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle">☰</button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="command.html">Command</a>
+        <a href="fleet.html">Fleet</a>
+        <a href="lore.html">Lore</a>
+        <a href="join.html">Join</a>
+        <a href="rules.html">Rules</a>
+        <a href="build-plans.html">Build Plans</a>
+      </div>
+
+      <div class="nav-right">
+        <a href="join.html" class="btn">Enlist</a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="hero container" id="home">
+    <div class="hero-grid">
+      <div class="hero-copy reveal">
+        <div class="eyebrow">PIRATE NATION • SEA POWER • CHAIN OF COMMAND</div>
+        <h1>The <span class="shine">Dark Armada</span></h1>
+        <p>
+          A feared nation built on surviving, building, organization, peace and winning.
+        </p>
+
+        <div class="hero-actions">
+          <a href="command.html" class="btn">View the Command</a>
+          <a href="lore.html" class="btn-secondary">Read the Lore</a>
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat">
+            <div class="stat-value">Pirate</div>
+            <div class="stat-label">Nation identity</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Ranked</div>
+            <div class="stat-label">Chain of command</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Naval</div>
+            <div class="stat-label">Fleet-focused power</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal">
+        <div class="fleet-preview">
+          <div class="preview-overlay">
+            <h3>Flagship of the Dark Armada</h3>
+            <p>
+              Red and white sails, iron discipline, and a command structure forged for conquest, raids, and rule across the sea.
+            </p>
+            <div class="status-row">
+              <span>Nation status: Rising</span>
+              <span>Seat of command: Flagship</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="container reveal" id="harbor">
+    <div class="section-head">
+      <div>
+        <h2>The harbor of the nation</h2>
+      </div>
+    </div>
+
+    <div class="hub-grid">
+      <a href="command.html" class="hub-link">
+        <article class="hub-card">
+          <div class="hub-icon">⚓</div>
+          <h3>Command</h3>
+          <p>See the complete chain of command, rank ladder, officers, and who answers to whom inside the nation.</p>
+          <span class="card-cta">Open command page →</span>
+        </article>
+      </a>
+
+      <a href="fleet.html" class="hub-link">
+        <article class="hub-card">
+          <div class="hub-icon">🚢</div>
+          <h3>Fleet</h3>
+          <p>View ships, captains, detachments, banners, and the naval power that defines the Dark Armada.</p>
+          <span class="card-cta">Open fleet page →</span>
+        </article>
+      </a>
+
+      <a href="lore.html" class="hub-link">
+        <article class="hub-card">
+          <div class="hub-icon">☠</div>
+          <h3>Lore</h3>
+          <p>Read the history, reputation, enemies, ideals, and ambitions behind the pirate nation.</p>
+          <span class="card-cta">Open lore page →</span>
+        </article>
+      </a>
+
+      <a href="join.html" class="hub-link">
+        <article class="hub-card">
+          <div class="hub-icon">🩸</div>
+          <h3>Join</h3>
+          <p>Learn how to enlist, what the Armada expects, and how new members rise through the ranks.</p>
+          <span class="card-cta">Open join page →</span>
+        </article>
+      </a>
+    </div>
+  </section>
+
+  <section class="container reveal" id="previews">
+    <div class="section-head">
+      <div>
+        <h2>You can always find victory in The Dark Armada.</h2>
+      </div>
+    </div>
+
+    <div class="preview-grid">
+      <article class="preview-card">
+        <div class="preview-icon">🏴</div>
+        <h3>Nation Identity</h3>
+        <p>We are more than just pirates, we are winners, winners of this event.</p>
+        <span class="rank-badge">Homepage preview</span>
+      </article>
+
+      <article class="preview-card">
+        <div class="preview-icon">⚔</div>
+        <h3>Quick overview</h3>
+        <p>We are an organized group dedicated to having peace and winning.</p>
+        <span class="rank-badge">Homepage preview</span>
+      </article>
+    </div>
+  </section>
+
+
+  <section class="container reveal">
+    <div class="section-head">
+      <div>
+        <h2>What makes the Armada memorable?</h2>
+      </div>
+    </div>
+
+    <div class="mini-grid">
+      <article class="mini-card">
+        <h3>Discipline</h3>
+        <p>The Dark Armada is organized, victors and survivalists of this deadly event.</p>
+      </article>
+      <article class="mini-card">
+        <h3>Reputation</h3>
+        <p>We will live on its name, even if we die.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="container cta reveal" id="join-preview">
+    <div class="cta-panel">
+      <h2>Will you swear to the Dark Armada?</h2>
+      <p>
+      </p>
+      <div class="hero-actions" style="justify-content: center; margin-bottom: 0;">
+        <a href="join.html" class="btn">Open Join Page</a>
+        <a href="command.html" class="btn-secondary">Open Command Page</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="brand">
+        <span class="brand-mark">☠</span>
+        <span>The Dark Armada</span>
+      </div>
+      <p class="footer-note">A pirate nation homepage built as a dramatic hub for command, fleet, lore, and recruitment pages.</p>
+      <p class="footer-note" style="text-align: right;">© 2026 The Dark Armada. All rights reserved.</p>
+    </div>
+  </footer>
+  <audio id="scrollSound" src="https://www.soundjay.com/misc/sounds/wind-blow-1.mp3"></audio>
+
+  <script>
+const scrollSound = document.getElementById('scrollSound');
+
+let lastScrollTime = 0;
+
+window.addEventListener('scroll', () => {
+  const now = Date.now();
+
+  if (now - lastScrollTime > 500) {
+    scrollSound.currentTime = 0;
+    scrollSound.volume = 0.05; // VERY quiet
+    scrollSound.play();
+    lastScrollTime = now;
+  }
+});
+</script>
+
+  <script>
+    const embersContainer = document.getElementById('embers');
+    for (let i = 0; i < 38; i++) {
+      const ember = document.createElement('span');
+      ember.className = 'ember';
+      ember.style.left = Math.random() * 100 + '%';
+      ember.style.top = Math.random() * 100 + '%';
+      ember.style.animationDuration = 6 + Math.random() * 8 + 's';
+      ember.style.animationDelay = Math.random() * 6 + 's';
+      ember.style.opacity = Math.random();
+      embersContainer.appendChild(ember);
+    }
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.16 });
+    reveals.forEach(section => observer.observe(section));
+
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMenu = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+    });
+  </script>
+  <script>
+const lightning = document.getElementById('lightning');
+
+setInterval(() => {
+  if (Math.random() < 0.2) {
+    lightning.style.opacity = 0.15;
+    setTimeout(() => lightning.style.opacity = 0, 100);
+  }
+}, 5000);
+</script>
+<script>
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+
+  document.querySelectorAll('.wave').forEach((wave, i) => {
+    const speed = (i + 1) * 0.1;
+    wave.style.transform = `translateX(${-scrollY * speed}px)`;
+  });
+});
+</script>
+  <script>
+const embers = document.getElementById('embers');
+
+for (let i = 0; i < 40; i++) {
+  const e = document.createElement('span');
+  e.className = 'ember';
+  e.style.left = Math.random() * 100 + '%';
+  e.style.top = Math.random() * 100 + '%';
+  e.style.animationDuration = (6 + Math.random() * 8) + 's';
+  e.style.animationDelay = Math.random() * 5 + 's';
+  embers.appendChild(e);
+}
+</script>
+</body>
+</html>
